@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Membership Form</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #000;
+      padding-bottom: 10px;
+    }
+    .logo {
+      height: 60px;
+    }
+    .version {
+      font-size: 14px;
+      color: gray;
+    }
+    h2 {
+      text-align: center;
+      margin-top: 10px;
+    }
+    .form-section {
+      margin-top: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    .signature {
+      margin-top: 40px;
+    }
+    .qr-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="Logo" class="logo">
+    <div class="version">Version: v2.0</div>
+  </header>
+
+  <h2>MEMBERSHIP FORM - LOYALTY CARD ID (2025–2028)</h2>
+
+  <form id="membershipForm">
+    <div class="form-section">
+      <label>Last Name: <input type="text" id="lastName" required></label>
+      <label>First Name: <input type="text" id="firstName" required></label>
+      <label>Middle Name: <input type="text" id="middleName" required></label>
+      <label>Address: <input type="text" required></label>
+      <label>Contact Number: <input type="text" required></label>
+      <label>Email Address: <input type="email" required></label>
+
+      <label>Father's Name: <input type="text" required></label>
+      <label>Father's Contact Number: <input type="text" required></label>
+
+      <label>Mother's Maiden Name: <input type="text" required></label>
+      <label>Mother's Contact Number: <input type="text" required></label>
+    </div>
+
+    <div class="qr-section">
+      <div>
+        <label><strong>Auto-Generated LCN Number:</strong></label>
+        <p id="lcnNumber">--</p>
+      </div>
+      <canvas id="qrCode"></canvas>
+    </div>
+
+    <div class="signature">
+      <p>Signature Over Printed Name (Customer): _________________________</p>
+      <p>Signature Over Printed Name (Admin): _________________________</p>
+    </div>
+
+    <p><em>Note: You may claim your DIGITAL LOYALTY CARD ID on OCTOBER 13, 2025 (Via Website)</em></p>
+    <p><em>Note: You may claim your PHYSICAL LOYALTY CARD ID on NOVEMBER 13, 2025</em></p>
+  </form>
+
+  <script>
+    function generateLCN(first, middle, last) {
+      const year = new Date().getFullYear().toString().slice(2);
+      const cleaned = (str) => str.replace(/\s+/g, '');
+      return `${year}-JMBPS-${cleaned(first)},${cleaned(middle)},${cleaned(last)}-00000`;
+    }
+
+    const firstNameEl = document.getElementById('firstName');
+    const middleNameEl = document.getElementById('middleName');
+    const lastNameEl = document.getElementById('lastName');
+    const lcnDisplay = document.getElementById('lcnNumber');
+    const qr = new QRious({ element: document.getElementById('qrCode'), size: 150 });
+
+    function updateQRandLCN() {
+      const first = firstNameEl.value.trim();
+      const middle = middleNameEl.value.trim();
+      const last = lastNameEl.value.trim();
+      if (first && middle && last) {
+        const lcn = generateLCN(first, middle, last);
+        lcnDisplay.textContent = lcn;
+        qr.value = lcn;
+      }
+    }
+
+    firstNameEl.addEventListener('input', updateQRandLCN);
+    middleNameEl.addEventListener('input', updateQRandLCN);
+    lastNameEl.addEventListener('input', updateQRandLCN);
+  </script>
+</body>
+</html>
